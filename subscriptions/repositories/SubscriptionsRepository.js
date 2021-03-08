@@ -6,14 +6,44 @@ class SubscriptionsRepository {
     }
 
     async addOrReplaceSubscription(subscription) {
-        // TODO: Implementation       
+        let len = await this.client.hlen(subscriptionKey)
+        
+        if(len > 0) {
+            // Si existe una Subscripcion, la reemplazamos.
+            // Primero borramos la antigua por seguridad.
+            await this.removeSubscription()
+        }
+
+        const data = this.transformToRepositoryFormat(subscription)
+        await this.client.hmset(subscriptionKey, data)
     }
 
     async getSubscription() {
-        // TODO: Implementation       
+        let len = await this.client.hlen(subscriptionKey)
+        
+        if(len <= 0) {
+            // Si no existe una Subscripcion entonces devolvemos
+            // error de que no esta
+            
+            return {} // TODO: Perhaps this should result in a 404?
+        }
+
+        const data = await this.client.hgetall(subscriptionKey)
+        return this.transformToDomainFormat(data)// TODO: Implementation       
     }
 
     async removeSubscription() {
+        let len = await this.client.hlen(subscriptionKey)
+        
+        if(len <= 0) {
+            // Si no existe una Subscripcion entonces devolvemos
+            // error de que no esta
+            return
+        }
+
+        let fields = await this.client.hkeys(subscriptionKey)
+        return await this.client.hdel(subscriptionKey, fields)
+    }
         // TODO: Implementation       
     }
 
@@ -29,7 +59,7 @@ class SubscriptionsRepository {
         }
     }
 
-    // This method will transform a repository representation to its
+--    // This method will transform a repository representation to its
     // corresponding domain representation.
     transformToDomainFormat(data) {
 
