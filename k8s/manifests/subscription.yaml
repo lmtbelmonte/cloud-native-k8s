@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscription
+  namespace: sns
+  labels:
+    app: subsciption
+spec:
+  selector:
+    matchLabels:
+      app: subscription
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: subscription
+    spec:
+      containers:
+      - name: subscription
+        image: sns-subscription:v1.0.0
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi      
+        ports:
+        - containerPort: 3001
+        livenessProbe:
+          httpGet:
+            path: /probes/liveness
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /probes/readiness
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 10  
+        env:
+          - name: NODE_ENV
+            value: "production"
+          - name: CONFIG_DIR
+            value: "/opt/sns/app/config"
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: redis-conf
+                key: redis_password
+        imagePullPolicy: "Never"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscription
+  namespace: sns
+  labels:
+    app: subscription
+spec:
+  ports:
+  - port: 3001
+    targetPort: 3001
+  selector:
+    app: subscription
