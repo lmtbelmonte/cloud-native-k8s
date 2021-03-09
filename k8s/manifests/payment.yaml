@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+  namespace: sns
+data:
+  config.json: |
+    {
+      "server_port": 3000,
+      "redis_host": "redis",
+      "redis_port": 6379
+    }
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +52,7 @@ spec:
             path: /probes/readiness
             port: 3000
           initialDelaySeconds: 5
-          periodSeconds: 10  
+          periodSeconds: 10
         env:
           - name: NODE_ENV
             value: "production"
@@ -49,7 +63,15 @@ spec:
               secretKeyRef:
                 name: redis-conf
                 key: redis_password
-        imagePullPolicy: "Never"
+        imagePullPolicy: "Never"  
+        volumeMounts:
+        - name: payment-config
+          mountPath: "/opt/sns/config"
+      volumes:
+      - name: payment-config
+        configMap:
+          name: payment-config      
+        
 ---
 apiVersion: v1
 kind: Service

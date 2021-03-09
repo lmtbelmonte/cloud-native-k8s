@@ -8,12 +8,10 @@ class SubscriptionsController {
     }
 
     async handleGetSubscription(req, res) {
-        const pm = await this.subscriptionsRepository.getSubscription()
-
-        if(Object.entries(pm).length == 0) {
+        const subscription = await this.subscriptionsRepository.getSubscription()
+        if(!subscription) {
             res.status(404)
-            res.send({"error":"Subscription not found"})
-            return
+            res.end()
         }
 
         const result = this.transformToApiFormat(pm)
@@ -21,7 +19,7 @@ class SubscriptionsController {
     }
 
     async handleAddSubscription(req, res) {
-        const name = req.body.name
+        
         const subscription = this.transformToDomainFormat(req.body)
 
         if(subscription.error) {
@@ -30,15 +28,26 @@ class SubscriptionsController {
             return
         }
 
+        const original = await this.subscriptionsRepository.getSubscription()
+        await subscription.subscription.process(original)
         await this.subscriptionRepository.addOrReplaceSubscription(subscription.subscription)
         const result = this.transformToApiFormat(subscription.subscription)
         res.send(result)          
     }
 
     async handleCancelSubscription(req, res) {
-        await this.subscriptionRepository.removeSubscription()
-        res.status(204)
-        res.end()
+        const subscription = await this.subscriptionRepository.getSubscription()
+        if(!subscription) {
+            res.status(404)
+            res.end()
+        }
+
+        await subscription.cancel()
+
+        await this.subscriptionRepository.addOrReplaceSubscription(subscription)
+        const result = this.transformToApiFormat(subscription)
+
+        res.send(result)
         // TODO: Implementation       
     }
 

@@ -1,16 +1,18 @@
 const domain = require('../domain/Subscription')
 
+let subscriptionKey = "subscription"
+
 class SubscriptionsRepository {
     constructor(client) {
         this.client = client
     }
 
     async addOrReplaceSubscription(subscription) {
+
         let len = await this.client.hlen(subscriptionKey)
-        
         if(len > 0) {
-            // Si existe una Subscripcion, la reemplazamos.
-            // Primero borramos la antigua por seguridad.
+            // Si no existe la subscripcion
+            
             await this.removeSubscription()
         }
 
@@ -22,29 +24,24 @@ class SubscriptionsRepository {
         let len = await this.client.hlen(subscriptionKey)
         
         if(len <= 0) {
-            // Si no existe una Subscripcion entonces devolvemos
-            // error de que no esta
-            
-            return {} // TODO: Perhaps this should result in a 404?
+            return null
         }
 
         const data = await this.client.hgetall(subscriptionKey)
-        return this.transformToDomainFormat(data)// TODO: Implementation       
+        return this.transformToDomainFormat(data)
     }
 
     async removeSubscription() {
         let len = await this.client.hlen(subscriptionKey)
         
         if(len <= 0) {
-            // Si no existe una Subscripcion entonces devolvemos
-            // error de que no esta
+
+            // Si no existe la subscripcion
             return
         }
 
         let fields = await this.client.hkeys(subscriptionKey)
         return await this.client.hdel(subscriptionKey, fields)
-    }
-        // TODO: Implementation       
     }
 
     // This method will transform a domain representation to its
@@ -59,7 +56,7 @@ class SubscriptionsRepository {
         }
     }
 
---    // This method will transform a repository representation to its
+    // This method will transform a repository representation to its
     // corresponding domain representation.
     transformToDomainFormat(data) {
 

@@ -1,3 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: subscription-config
+  namespace: sns
+data:
+  config.json: |
+    {
+      "server_port": 3001,
+      "redis_host": "redis",
+      "redis_port": 6379,
+      "paymentUrlBase": "http://payment:3000",
+      "amountPerMonth": 25.00
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,6 +65,13 @@ spec:
                 name: redis-conf
                 key: redis_password
         imagePullPolicy: "Never"
+        volumeMounts:
+        - name: subscription-config
+          mountPath: "/opt/sns/config"
+      volumes:
+      - name: subscription-config
+        configMap:
+          name: subscription-config
 ---
 apiVersion: v1
 kind: Service
