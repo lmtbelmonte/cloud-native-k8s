@@ -40,9 +40,10 @@ class PaymentsRepository {
         let len = await this.client.hlen(paymentMethodKey)
         
         if(len <= 0) {
-            // If there is already an existing payment method, we're
-            // going to replace that. Remove the old one first just
-            // to make sure.
+            
+            // Si ya exsiste un metodo de pago
+            // lo reeemplazamos boorando primero en antiguo
+            
             return
         }
 

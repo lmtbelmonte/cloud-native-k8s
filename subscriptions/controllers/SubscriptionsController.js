@@ -8,18 +8,18 @@ class SubscriptionsController {
     }
 
     async handleGetSubscription(req, res) {
-        const subscription = await this.subscriptionsRepository.getSubscription()
+        const subscription = await this.subscriptionRepository.getSubscription()
+
         if(!subscription) {
             res.status(404)
             res.end()
         }
 
-        const result = this.transformToApiFormat(pm)
+        const result = this.transformToApiFormat(subscription)
         res.send(result)        
     }
 
     async handleAddSubscription(req, res) {
-        
         const subscription = this.transformToDomainFormat(req.body)
 
         if(subscription.error) {
@@ -28,27 +28,26 @@ class SubscriptionsController {
             return
         }
 
-        const original = await this.subscriptionsRepository.getSubscription()
+        const original = await this.subscriptionRepository.getSubscription()
         await subscription.subscription.process(original)
         await this.subscriptionRepository.addOrReplaceSubscription(subscription.subscription)
         const result = this.transformToApiFormat(subscription.subscription)
-        res.send(result)          
+        res.send(result)        
     }
 
     async handleCancelSubscription(req, res) {
+
         const subscription = await this.subscriptionRepository.getSubscription()
+
         if(!subscription) {
             res.status(404)
             res.end()
         }
 
         await subscription.cancel()
-
         await this.subscriptionRepository.addOrReplaceSubscription(subscription)
-        const result = this.transformToApiFormat(subscription)
-
-        res.send(result)
-        // TODO: Implementation       
+        const result = this.transformToApiFormat(subscription) 
+        res.send(result)        
     }
 
     // This method will take a request body as specified in the OpenAPI

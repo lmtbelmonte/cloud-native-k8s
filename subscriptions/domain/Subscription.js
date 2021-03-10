@@ -104,15 +104,34 @@ class Subscription {
     // This method will process a payment on the current subscription
     // for the given amount.
     async processPayment(amount) {
-        // TODO: Implement.
-        // This sohhuld communicate with the payment service to make a payment.
+        const body = {
+            "amount": amount,
+            "type": "payment"
+        }
+
+        try {
+            const resp = await axios.post(paymentUrl, body)
+            logger.info(`Got response from payment: ${resp.data.status}`)
+        } catch(error) {
+            logger.error(`Error while processing payment: ${error}`)
+        }
     }
 
     // This method will process a refund on the current subscription
     // for the given amount.
     async processRefund(amount) {
-        // TODO: Implement.
-        // This should communicate with the payment service to process the refund.
+
+        const body = {
+            "amount": amount,
+            "type": "refund"
+        }
+
+        try {
+            const resp = await axios.post(paymentUrl, body)
+            logger.info(`Got response from refund: ${resp.data.status}`)
+        } catch(error) {
+            logger.error(`Error while processing refund: ${error}`)            
+        }
     }
 }
 

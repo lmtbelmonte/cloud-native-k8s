@@ -19,7 +19,7 @@ metadata:
   name: subscription
   namespace: sns
   labels:
-    app: subsciption
+    app: subscription
 spec:
   selector:
     matchLabels:
@@ -32,39 +32,39 @@ spec:
     spec:
       containers:
       - name: subscription
-        image: sns-subscription:v1.0.0
-        resources:
-          limits:
-            cpu: 300m
-            memory: 256Mi
-          requests:
-            cpu: 250m
-            memory: 128Mi      
+        image: sns-subscription:latest
         ports:
         - containerPort: 3001
-        livenessProbe:
-          httpGet:
-            path: /probes/liveness
-            port: 3001
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /probes/readiness
-            port: 3001
-          initialDelaySeconds: 5
-          periodSeconds: 10  
         env:
           - name: NODE_ENV
             value: "production"
           - name: CONFIG_DIR
-            value: "/opt/sns/app/config"
+            value: "/opt/sns/config"
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: redis-conf
                 key: redis_password
         imagePullPolicy: "Never"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /probes/liveness
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /probes/readiness
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 30
         volumeMounts:
         - name: subscription-config
           mountPath: "/opt/sns/config"

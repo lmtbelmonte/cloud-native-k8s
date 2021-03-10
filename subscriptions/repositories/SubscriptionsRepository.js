@@ -10,9 +10,12 @@ class SubscriptionsRepository {
     async addOrReplaceSubscription(subscription) {
 
         let len = await this.client.hlen(subscriptionKey)
+        
         if(len > 0) {
-            // Si no existe la subscripcion
             
+            // Si el pago existe lo reemplazamos.
+            // Primero borramos el que existe
+
             await this.removeSubscription()
         }
 
@@ -35,8 +38,10 @@ class SubscriptionsRepository {
         let len = await this.client.hlen(subscriptionKey)
         
         if(len <= 0) {
-
-            // Si no existe la subscripcion
+            
+            // Si el pago existe lo reemplazamos.
+            // Primero borramos el que existe
+            
             return
         }
 

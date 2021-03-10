@@ -1,4 +1,5 @@
 let makeRedisClient = (config) => {
+
     const redis = require("async-redis")
     const options = {
         host: config.redis_host,
@@ -7,7 +8,6 @@ let makeRedisClient = (config) => {
     }
 
     return redis.createClient(options)
-    // This will likely be similar to the implementation for milestone 1.
 }
 
 module.exports = (config) => {

@@ -1,14 +1,11 @@
-// Luis Merino Troncoso
-// Controlador para las sondas tanto la de Liveness como la de readyness
-
 class ProbesController {
 
     async handleLiveness(req, res) {
-          res.send ({"ok": true})   // TODO: Implementation of liveness probe API       
+        res.send({"ok": true})        
     }
 
     async handleReadiness(req, res) {
-         res.send ({"ok": true})  // TODO: Implementation of readiness probe API        
+        res.send({"ok": true})        
     }
 }
 
@@ -18,11 +15,11 @@ module.exports = (repositories) => {
     var express = require('express')
     var router = express.Router()
 
-    router.get('/liveness', function (req, res) { // TODO: Add API route for liveness
+    router.get('/liveness', function (req, res) {
         controller.handleLiveness(req, res)
     })
 
-    router.get('/readiness', function (req, res) { // TODO: Add API route for readiness
+    router.get('/readiness', function (req, res) {
         controller.handleReadiness(req, res)
     })
 

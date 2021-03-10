@@ -12,14 +12,15 @@ The master branch is the starting point for the liveProject.
 * api/postman - Postman tests for APIs.
 * k8s - Kubernetes YAML files and other related Kubernetes resources for the SecurityNewsSource services and deployment.
 * payments - The source for the `payment` service. This includes the Dockerfile and related files.
+* subscriptions - This is where the source for the `subscription` service will be. This includes the Dockerfile and related files.
 
 Directories for additional services should be added to this top-level directory. Additional Kubernetes YAML files should
 be added to the `k8s/manifests` directory. Additional Kubernetes files that are not YAML manifests can be added anywhere
 in the `k8s` directory.
 
-## Starting Point Diagram
+## Solution Diagram
 
-![Starting Point](diagrams/Milestone1-Start.png)
+![Solution](diagrams/Milestone2-End.png)
 
 # Additional Notes 
 

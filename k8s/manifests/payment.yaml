@@ -10,7 +10,6 @@ data:
       "redis_host": "redis",
       "redis_port": 6379
     }
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,47 +30,46 @@ spec:
     spec:
       containers:
       - name: payment
-        image: sns-payment:v1.0.3
-        resources:
-          limits:
-            cpu: 300m
-            memory: 256Mi
-          requests:
-            cpu: 250m
-            memory: 128Mi      
+        image: sns-payment:latest
         ports:
         - containerPort: 3000
-        livenessProbe:
-          httpGet:
-            path: /probes/liveness
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /probes/readiness
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
         env:
           - name: NODE_ENV
             value: "production"
           - name: CONFIG_DIR
-            value: "/opt/sns/app/config"
+            value: "/opt/sns/config"
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: redis-conf
                 key: redis_password
-        imagePullPolicy: "Never"  
+        imagePullPolicy: "Never"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /probes/liveness
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /probes/readiness
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
         volumeMounts:
         - name: payment-config
           mountPath: "/opt/sns/config"
       volumes:
       - name: payment-config
         configMap:
-          name: payment-config      
-        
+          name: payment-config
 ---
 apiVersion: v1
 kind: Service
