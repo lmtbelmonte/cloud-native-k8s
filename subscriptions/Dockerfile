@@ -1,8 +1,13 @@
 FROM node:14.4.0-alpine3.11
 
 RUN mkdir -p /opt/sns/app && \
-    mkdir -p /opt/sns/logs && \
-    chmod 700 /opt/sns/logs
+    mkdir -p /opt/sns/logs
+
+RUN  chgrp -R 0 /opt/sns && \
+     chmod -R g=u /opt/sns
+
+# USER 1001
+# RUN chown -R 1001:0 /opt/sns
 
 COPY config /opt/sns/app/config 
 COPY controllers /opt/sns/app/controllers
@@ -14,7 +19,7 @@ COPY docker-entrypoint.sh /opt/sns/app/
 
 WORKDIR /opt/sns/app
 
-RUN chmod 700 docker-entrypoint.sh && \
+RUN chmod 775 docker-entrypoint.sh && \
     dos2unix docker-entrypoint.sh && \
     npm install
 

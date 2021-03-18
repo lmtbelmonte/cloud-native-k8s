@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: subscription
-        image: sns-subscription:latest
+        image: lmtbelmonte/sns-subscription:v1.0.1
         ports:
         - containerPort: 3001
         env:
@@ -45,7 +45,7 @@ spec:
               secretKeyRef:
                 name: redis-conf
                 key: redis_password
-        imagePullPolicy: "Never"
+        imagePullPolicy: "IfNotPresent"
         resources:
           requests:
             cpu: 250m

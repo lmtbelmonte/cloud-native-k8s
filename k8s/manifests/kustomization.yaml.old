@@ -6,7 +6,7 @@ generatorOptions:
 
 resources:
 - ns.yaml
-- redis-stateful.yaml
+- redis.yaml
 - payment.yaml
 - subscription.yaml
 
