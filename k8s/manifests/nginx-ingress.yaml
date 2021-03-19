@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sns
+  namespace: sns
+  annotations:
+    kubernetes.io/ingress.class: "nginx"    
+
+spec:
+  tls:
+  - hosts:
+    - localhost
+    secretName: ingress-cert
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /api/payment-methods
+        backend:
+          serviceName: payment
+          servicePort: 3000
+      - path: /api/subscriptions
+        backend:
+          serviceName: subscription
+          servicePort: 3001

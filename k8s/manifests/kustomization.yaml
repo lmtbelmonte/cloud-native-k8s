@@ -9,6 +9,8 @@ resources:
 - redis-stateful.yaml
 - payment.yaml
 - subscription.yaml
+- nginx-ingress.yaml
+
 
 secretGenerator:
 - name: redis-conf
@@ -16,4 +18,10 @@ secretGenerator:
   files: 
     - secrets/redis.conf
     - secrets/redis_password
+# - name: # TLS Cert Name
+#  namespace: sns
+#  type: "kubernetes.io/tls"
+#  files:
+#    - tls.crt= # TLS certificate file
+#    - tls.key= # TLS Key file
 
