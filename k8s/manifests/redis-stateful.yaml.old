@@ -6,11 +6,11 @@ metadata:
   labels:
     app: redis
 spec:
+  serviceName: redis
+  replicas: 3
   selector:
     matchLabels:
       app: redis
-  serviceName: redis
-  replicas: 3
   template:
     metadata:
       labels:
@@ -20,23 +20,37 @@ spec:
       - name: redis
         image: redis:6.0.4-alpine
         args: 
-          - "/usr/local/etc/redis/redis.conf"
+          - "usr/local/etc/redis/redis.conf"
           - "--appendonly"
           - "yes"
+        resources:
+           limits:
+             memory: "1.5Gi"
+           requests:
+             memory: "1.5Gi"
         ports:
         - containerPort: 6379
-        resources:
-          requests:
-            cpu: 250m
-            memory: 128Mi
-          limits:
-            cpu: 300m
-            memory: 256Mi
+        livenessProbe:
+         tcpSocket:
+           port: 6379 
+         initialDelaySeconds: 30
+         timeoutSeconds: 5
+         periodSeconds: 5
+         failureThreshold: 5
+         successThreshold: 1
+        readinessProbe:
+         exec:
+           command:
+           - redis-cli
+           - ping
+         initialDelaySeconds: 10
+         timeoutSeconds: 5
+         periodSeconds: 3
         volumeMounts:
         - name: conf
           mountPath: "/usr/local/etc/redis"
         - name: redis-data
-          mountPath: "/data"
+          mountPath: /data
       volumes:
       - name: conf
         secret:
@@ -49,7 +63,7 @@ spec:
       storageClassName: gp2
       resources:
         requests:
-          storage: 1Gi
+          storage: 3Gi
 ---
 apiVersion: v1
 kind: Service
