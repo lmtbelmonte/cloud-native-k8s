@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: api-monitor
+  namespace: openshift-monitoring
+  labels:
+    layer: api
+    release: sns
+spec:
+  namespaceSelector:
+    matchNames:
+    - sns
+  selector:
+    matchLabels:
+      layer: api 
+  endpoints:
+  - port: web
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  generation: 1
+  labels:
+    app: redis
+    release: sns
+  name: redis-monitor
+  namespace: openshift-monitoring
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - sns
+  selector:
+    matchLabels:
+      app: redis
+      app.kubernetes.io/component: metrics
