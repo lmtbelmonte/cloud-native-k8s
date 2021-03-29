@@ -12,6 +12,8 @@ resources:
 - payment.yaml
 - subscription.yaml
 - nginx-ingress.yaml
+- cluster-monitoring-config.yaml
+- monitor.yaml
 
 
 secretGenerator:
