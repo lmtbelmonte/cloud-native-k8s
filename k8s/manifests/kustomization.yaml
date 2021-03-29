@@ -5,6 +5,8 @@ generatorOptions:
   disableNameSuffixHash: true
 
 resources:
+- service-account.yaml
+- role-create.yaml
 - ns.yaml
 - redis-stateful.yaml
 - payment.yaml
@@ -24,4 +26,3 @@ secretGenerator:
 #  files:
 #    - tls.crt= # TLS certificate file
 #    - tls.key= # TLS Key file
-

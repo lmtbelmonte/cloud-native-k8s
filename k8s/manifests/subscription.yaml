@@ -30,6 +30,7 @@ spec:
       labels:
         app: subscription
     spec:
+      serviceAccountName: sa-nomount
       securityContext:
         runAsUser: 1000591000
         fsGroup: 1000590000

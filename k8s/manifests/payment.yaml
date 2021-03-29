@@ -28,6 +28,7 @@ spec:
       labels:
         app: payment
     spec:
+      serviceAccountName: sa-nomount
       securityContext:
         runAsUser: 1000591000
         fsGroup: 1000590000
