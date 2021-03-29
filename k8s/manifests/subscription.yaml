@@ -30,9 +30,19 @@ spec:
       labels:
         app: subscription
     spec:
+      serviceAccountName: sa-nomount
+      securityContext:
+        runAsUser: 1000591000
+        fsGroup: 1000590000
+        runAsGroup: 1000590000
       containers:
       - name: subscription
         image: lmtbelmonte/sns-subscription:v1.0.1
+        securityContext:
+          runAsUser: 1000591000
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
         ports:
         - containerPort: 3001
         env:

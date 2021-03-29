@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: sns
+  name: service-creator
+rules:
+- apiGroups: [""]
+  verbs: ["get", "list", "create"]
+  resources: ["services"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: role-bind-sa
+  namespace: sns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: service-creator
+subjects:
+- kind: ServiceAccount
+  name: sa-nomount
+  namespace: sns

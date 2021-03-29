@@ -28,9 +28,19 @@ spec:
       labels:
         app: payment
     spec:
+      serviceAccountName: sa-nomount
+      securityContext:
+        runAsUser: 1000591000
+        fsGroup: 1000590000
+        runAsGroup: 1000590000
       containers:
       - name: payment
         image: lmtbelmonte/sns-payment:v1.0.2
+        securityContext:
+          runAsUser: 1000591000
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
         ports:
         - containerPort: 3000
         env:
