@@ -32,7 +32,7 @@ spec:
       - name: payment
         image: lmtbelmonte/sns-payment:v1.0.2
         securityContext:
-          runAsUser: 1000
+          runAsUser: 1000591000
         ports:
         - containerPort: 3000
         env:
