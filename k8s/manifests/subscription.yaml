@@ -30,6 +30,10 @@ spec:
       labels:
         app: subscription
     spec:
+      securityContext:
+        runAsUser: 1000591000
+        fsGroup: 1000590000
+        runAsGroup: 1000590000
       containers:
       - name: subscription
         image: lmtbelmonte/sns-subscription:v1.0.1
