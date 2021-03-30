@@ -35,7 +35,7 @@ spec:
         runAsGroup: 1000590000
       containers:
       - name: payment
-        image: lmtbelmonte/sns-payment:v1.0.2
+        image: lmtbelmonte/sns-payment:v1.0.3
         securityContext:
           runAsUser: 1000591000
           runAsNonRoot: true
