@@ -16,6 +16,11 @@ spec:
       labels:
         app: redis
     spec:
+      serviceAccountName: sa-nomount
+      securityContext:
+        runAsUser: 1000591000
+        fsGroup: 1000590000
+        runAsGroup: 1000590000
       containers:
       - name: redis
         image: redis:6.0.4-alpine
@@ -23,6 +28,11 @@ spec:
           - "/usr/local/etc/redis/redis.conf"
           - "--appendonly"
           - "yes"
+        securityContext:
+          runAsUser: 1000591000
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false  
         ports:
         - containerPort: 6379
         resources:
